@@ -1,0 +1,996 @@
+:root {
+  --bg: #f9fafb;
+  --panel: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --accent: #3b82f6;
+  --border: #e5e7eb;
+
+  /* ハイライト用の色 */
+  --highlight-bg: #eef2ff;
+  /* var(--accent) at 10% opacity */
+
+  /* Dark palette (used in some UI parts) */
+  --bg-dark: #0f1115;
+  --panel-dark: #171a22;
+  --text-dark: #e6e8eb;
+  --border-dark: #222733;
+
+  --panel-width: 320px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  /* [メインコンテンツ], [フッター] */
+  grid-template-columns: var(--panel-width) 1fr;
+  /* [パネル], [メインエリア] */
+  transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 100vh;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', 'Noto Sans JP', ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* レイアウト */
+.main-content-wrapper {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  transition: none;
+  height: 100vh;
+  /* メインエリアは常に画面高さいっぱい (内部でスクロール) */
+  grid-row: 1 / 2;
+  grid-column: 2 / 3;
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+}
+
+body.menu-closed {
+  --panel-width: 64px;
+}
+
+.panel {
+  border-right: 1px solid var(--border);
+  background: var(--panel);
+  position: relative;
+  height: 100vh;
+  /* パネルは常に画面高さいっぱい */
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  grid-row: 1 / 2;
+  grid-column: 1 / 2;
+  flex-shrink: 0;
+}
+
+.panel-content-scrollable {
+  margin-top: 64px;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 20px 18px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
+  opacity: 1;
+  visibility: visible;
+  -webkit-overflow-scrolling: touch;
+
+  /* ▼▼▼ 変更点(1/2)：スクロールバー非表示（Firefox, IE）▼▼▼ */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* ▲▲▲ 変更ここまで ▲▲▲ */
+}
+
+body.menu-closed .panel-content-scrollable,
+body.menu-closed .panel h1 {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.panel h1 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
+  opacity: 1;
+  visibility: visible;
+}
+
+.panel h2 {
+  margin: 18px 0 8px;
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.group+.group {
+  margin-top: 8px;
+}
+
+.control {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 10px;
+  align-items: center;
+  margin: 12px 0;
+}
+
+.control-label-wrapper {
+  margin-bottom: -8px;
+}
+
+.control-label-wrapper>span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.control>span {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.control.control-checkbox>span:first-child {
+  grid-column: 1 / 2;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.control.control-checkbox>input[type="checkbox"] {
+  grid-column: 2 / 3;
+  justify-self: end;
+}
+
+/* range スライダー以外 */
+.control:not(.control-slider) input[type="range"] {
+  width: 100%;
+  grid-column: 1 / 2;
+}
+
+.control:not(.control-slider) output {
+  min-width: 40px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  grid-column: 2 / 3;
+}
+
+.control select {
+  width: 100%;
+  padding: 6px;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+/* スライダー */
+.control.control-slider {
+  grid-template-columns: auto 1fr auto auto;
+}
+
+.control.control-slider>span:first-child {
+  margin-bottom: -4px;
+}
+
+.control.control-slider>button:nth-of-type(1) {
+  grid-column: 1 / 2;
+  justify-self: start;
+}
+
+.control.control-slider>input[type="range"] {
+  grid-column: 2 / 3;
+  width: 100%;
+}
+
+.control.control-slider>button:nth-of-type(2) {
+  grid-column: 3 / 4;
+  justify-self: start;
+}
+
+.control.control-slider>output {
+  grid-column: 4 / 5;
+  min-width: 40px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* +/- ボタン */
+.btn-step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-step:hover {
+  background: var(--bg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-step:active {
+  background: var(--border);
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 8px 10px;
+  background: var(--accent);
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.btn.subtle {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.note {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: normal;
+}
+
+/* Main stage area */
+.stageWrap {
+  position: relative;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px;
+  background: var(--bg-dark);
+  height: 100%;
+  min-height: 0;
+}
+
+#viewport {
+  position: relative;
+  display: inline-block;
+  transform-origin: 0 0;
+}
+
+#scoreImg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+  transform-origin: 0 0;
+}
+
+#stage {
+  position: relative;
+  display: block;
+  cursor: crosshair;
+  border: 2px solid #a5b4fc;
+}
+
+#stage.is-move,
+#stage.is-img-move,
+#stage.is-staff-move {
+  cursor: grab;
+}
+
+#stage.is-img-move.is-grabbing,
+#stage.is-staff-move.is-grabbing {
+  cursor: grabbing;
+}
+
+.group {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+.group+.group {
+  margin-top: 12px;
+}
+
+#menuToggleBtn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#menuToggleBtn .bar {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: var(--text);
+  border-radius: 2px;
+}
+
+#menuToggleBtn .bar+.bar {
+  margin-top: 5px;
+}
+
+/* Mode switcher */
+.mode-switcher {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+  overflow: visible;
+}
+
+.mode-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--panel-dark);
+  color: var(--text-dark);
+  border: 2px solid var(--border-dark);
+  font-size: 1.2em;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, transform 0.3s ease-out, opacity 0.3s ease-out;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.mode-btn:hover {
+  background-color: var(--border-dark);
+  border-color: #555;
+}
+
+.mode-btn.active {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.fab-main {
+  font-size: 1.5em;
+}
+
+/* 旧: 擬似要素ツールチップは無効化 */
+.mode-btn::after {
+  content: none !important;
+}
+
+/* 実体ツールチップ */
+.ui-tooltip {
+  position: fixed;
+  max-width: 320px;
+  padding: 6px 10px;
+  background-color: var(--panel-dark);
+  color: var(--text-dark);
+  border: 1px solid var(--border-dark);
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s ease;
+  white-space: normal;
+  word-break: keep-all;
+}
+
+.ui-tooltip.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.ui-tooltip[data-side="left"] {
+  text-align: right;
+}
+
+/* FAB／Undo/Redo の行配置 */
+.fab-main-row {
+  display: flex;
+  gap: 8px;
+  order: 2;
+}
+
+/* サブボタン：折りたたみと出現順（下→上） */
+.sub-mode-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  order: 1;
+  opacity: 0;
+  visibility: hidden;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease-out, max-height 0.3s ease-out, visibility 0.3s ease-out;
+}
+
+.mode-switcher.open .sub-mode-buttons {
+  opacity: 1;
+  visibility: visible;
+  max-height: 320px;
+}
+
+.sub-mode-buttons .mode-btn {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.mode-switcher.open .sub-mode-buttons #eraseModeBtn {
+  transition-delay: 0s;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mode-switcher.open .sub-mode-buttons #drawModeBtn {
+  transition-delay: 0.06s;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mode-switcher.open .sub-mode-buttons #moveModeBtn {
+  transition-delay: 0.12s;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mode-switcher.open .sub-mode-buttons #imgMoveModeBtn {
+  transition-delay: 0.18s;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staff grid */
+.staff-config-grid {
+  display: grid;
+  grid-template-columns: 90px 85px auto;
+  gap: 10px 12px;
+  align-items: center;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.staff-config-grid .header {
+  font-size: 12px;
+  color: var(--muted);
+  justify-self: start;
+}
+
+.staff-config-grid .header:nth-of-type(1) {
+  padding-left: 1px;
+}
+
+.staff-config-grid .header:nth-of-type(2) {
+  padding-left: 9px;
+}
+
+.staff-config-grid .header:nth-of-type(3) {
+  padding-left: 2px;
+}
+
+
+.staff-config-grid label[for^="activeStaff"] {
+  justify-self: start;
+  padding-left: 0px;
+}
+
+.staff-config-grid input[type="checkbox"] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+
+.staff-clef-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.staff-clef-group input[type="radio"] {
+  justify-self: start;
+}
+
+.staff-config-grid label {
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+
+.staff-config-grid input:disabled {
+  opacity: 0.3;
+}
+
+/* disabled時のラベルスタイル */
+.segment-control input[type="radio"]:disabled+label {
+  opacity: 0.4;
+  cursor: not-allowed;
+  color: var(--muted);
+  pointer-events: none;
+  background-color: var(--bg);
+  border-color: var(--border);
+}
+
+
+/* Site header */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  height: 56px;
+  background: #ffffff;
+  /* <-- グレー背景に変更 */
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 100;
+}
+
+/* ▼▼▼ ヘッダーロゴのスタイル（全ページ共通） ▼▼▼ */
+.header-logo {
+  font-family: 'Kaisei Decol', sans-serif;
+  /* フォント適用 */
+  font-weight: 500;
+  font-size: 20px;
+  /* サイズ調整 */
+  letter-spacing: 0.05em;
+  /* 字間 */
+  color: var(--text);
+  text-decoration: none;
+}
+
+/* ホバーエフェクト無効化 */
+.header-logo:hover {
+  color: var(--text);
+  /* ホバー色を通常色と同じにする */
+}
+
+/* ロゴ文字色 (全ページ共通) */
+.header-logo .logo-char-1 {
+  color: #86cecb;
+}
+
+.header-logo .logo-char-2 {
+  color: #ebd3cf;
+}
+
+.header-logo .logo-char-3 {
+  color: #ffd98c;
+}
+
+.header-logo .logo-char-4 {
+  color: var(--text);
+}
+
+/* ▲▲▲ 変更ここまで ▲▲▲ */
+
+
+.header-nav a {
+  font-size: 14px;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 8px 12px;
+}
+
+.header-nav a:hover {
+  color: var(--accent);
+}
+
+
+/* ======================================== */
+/* ▼▼▼ 提案UIのスタイル ▼▼▼ */
+/* ======================================== */
+
+/* 1. 広告プレースホルダー */
+.ad-placeholder {
+  padding-bottom: 12px;
+}
+
+.ad-box {
+  width: 300px;
+  height: 200px;
+  margin: 4px auto;
+  background: #f0f4f8;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* 2. トグルスイッチ */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+  justify-self: start;
+  /* 'center' から 'start' に変更 */
+  /* staff-grid用 */
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-switch .slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--border);
+  border-radius: 24px;
+  transition: .3s;
+}
+
+.toggle-switch .slider::before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: .3s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-switch input:checked+.slider {
+  background-color: var(--accent);
+}
+
+.toggle-switch input:checked+.slider::before {
+  transform: translateX(20px);
+}
+
+/* 3. セグメントコントロール */
+.segment-control {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  justify-self: start;
+  align-self: center;
+}
+
+.segment-control input[type="radio"] {
+  display: none;
+}
+
+.segment-control label {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 10px;
+  cursor: pointer;
+  background: var(--panel);
+  color: var(--muted);
+  transition: background-color 0.2s, color 0.2s;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* 音部記号ラベルのスタイル */
+.segment-control label.label-clef {
+  font-size: 18px;
+  font-weight: 400;
+  padding: 2px 0;
+  line-height: 1.2;
+  width: 38px;
+  text-align: center;
+}
+
+
+.segment-control label+input[type="radio"]+label {
+  border-left: 1px solid var(--border);
+}
+
+.segment-control label:hover {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.segment-control input[type="radio"]:checked+label {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* 「表記」セグメントコントロール用のレイアウト */
+.control.control-segment {
+  grid-template-columns: auto auto;
+  gap: 6px 10px;
+  align-items: center;
+  justify-content: start;
+}
+
+.control.control-segment>span {
+  grid-column: 1 / 2;
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 0;
+}
+
+.control.control-segment>.segment-control {
+  grid-column: 2 / 3;
+}
+
+
+/* ======================================== */
+/* ▼▼▼ 4. 行ハイライト ▼▼▼ */
+/* ======================================== */
+
+/* (A) 行を構成する要素の基本スタイル */
+.staff-config-grid>[data-staff-id] {
+  transition: background-color 0.2s;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-top: -6px;
+  margin-bottom: -6px;
+}
+
+/* (B) 1列目 (IDラベル) のスタイル */
+.staff-config-grid>label[for^="activeStaff"] {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  padding-left: 6px;
+  margin-left: -6px;
+  font-weight: 400;
+}
+
+/* (C) 3列目 (音部記号) のスタイル */
+.staff-config-grid>.segment-control[data-staff-id] {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  padding-left: 6px;
+  margin-left: -22px;
+
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  padding-right: 6px;
+  margin-right: -6px;
+  pointer-events: none;
+}
+
+.staff-config-grid>.segment-control[data-staff-id] label {
+  pointer-events: auto;
+}
+
+/* (D) ハイライトのロジック (背景色) */
+div:has(#activeStaff1:checked)~.staff-config-grid [data-staff-id="1"],
+div:has(#activeStaff2:checked)~.staff-config-grid [data-staff-id="2"],
+div:has(#activeStaff3:checked)~.staff-config-grid [data-staff-id="3"],
+div:has(#activeStaff4:checked)~.staff-config-grid [data-staff-id="4"] {
+  background-color: var(--highlight-bg);
+}
+
+/* (E) ハイライトのロジック (IDラベルの文字色) */
+div:has(#activeStaff1:checked)~.staff-config-grid label[for="activeStaff1"][data-staff-id="1"],
+div:has(#activeStaff2:checked)~.staff-config-grid label[for="activeStaff2"][data-staff-id="2"],
+div:has(#activeS_aff3:checked)~.staff-config-grid label[for="activeStaff3"][data-staff-id="3"],
+div:has(#activeStaff4:checked)~.staff-config-grid label[for="activeStaff4"][data-staff-id="4"] {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* (F) ホバー時のハイライト (選択中を除く) */
+.staff-config-grid:has(> [data-staff-id]:hover) [data-staff-id]:hover~[data-staff-id],
+.staff-config-grid:has(> [data-staff-id]:hover) [data-staff-id]:hover {
+  background-color: var(--bg);
+}
+
+/* (G) 選択中の行のホバーは、(D)のハイライト色を維持する */
+div:has(#activeStaff1:checked)~.staff-config-grid [data-staff-id="1"]:hover,
+div:has(#activeStaff2:checked)~.staff-config-grid [data-staff-id="2"]:hover,
+div:has(#activeStaff3:checked)~.staff-config-grid [data-stats-id="3"]:hover,
+div:has(#activeStaff4:checked)~.staff-config-grid [data-staff-id="4"]:hover {
+  background-color: var(--highlight-bg);
+}
+
+/* (H) 音部記号がハイライトされた時の背景色調整 */
+div:has(#activeStaff1:checked)~.staff-config-grid [data-staff-id="1"].segment-control label,
+div:has(#activeStaff2:checked)~.staff-config-grid [data-staff-id="2"].segment-control label,
+div:has(#activeStaff3:checked)~.staff-config-grid [data-staff-id="3"].segment-control label,
+div:has(#activeStaff4:checked)~.staff-config-grid [data-staff-id="4"].segment-control label {
+  background-color: var(--panel);
+}
+
+/* 選択中のボタンはアクセントカラーを維持 */
+div:has(#activeStaff1:checked)~.staff-config-grid [data-staff-id="1"].segment-control input:checked+label,
+div:has(#activeStaff2:checked)~.staff-config-grid [data-staff-id="2"].segment-control input:checked+label,
+div:has(#activeStaff3:checked)~.staff-config-grid [data-staff-id="3"].segment-control input:checked+label,
+div:has(#activeStaff4:checked)~.staff-config-grid [data-staff-id="4"].segment-control input:checked+label {
+  background-color: var(--accent);
+}
+
+/* (I) 「(選択中)」テキストの追加 */
+div:has(#activeStaff1:checked)~.staff-config-grid label[for="activeStaff1"][data-staff-id="1"]::after,
+div:has(#activeStaff2:checked)~.staff-config-grid label[for="activeStaff2"][data-staff-id="2"]::after,
+div:has(#activeStaff3:checked)~.staff-config-grid label[for="activeStaff3"][data-staff-id="3"]::after,
+div:has(#activeStaff4:checked)~.staff-config-grid label[for="activeStaff4"][data-staff-id="4"]::after {
+  content: "(選択中)";
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.site-footer {
+  grid-row: 2 / 3;
+  grid-column: 1 / -1;
+
+  padding: 24px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.footer-nav {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.footer-nav a {
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.footer-nav a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.copyright {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+  margin-top: 0;
+}
+
+/* ▼▼▼ 変更点(2/2)：スクロールバー非表示（Chrome, Safari）▼▼▼ */
+.panel-content-scrollable::-webkit-scrollbar {
+  display: none;
+}
+
+/* ...（既存のスタイルはすべてそのまま）... */
+
+/* ▼▼▼ 変更点(2/2)：スクロールバー非表示（Chrome, Safari）▼▼▼ */
+.panel-content-scrollable::-webkit-scrollbar {
+  display: none;
+}
+
+/* ======================================== */
+/* ▼▼▼ 静的ページ用のスタイル (修正版) ▼▼▼ */
+/* ======================================== */
+
+/* 静的ページ用のbodyレイアウト */
+body.static-page {
+  /* サイドパネル（grid-template-columnsの1列目）を無くす */
+  grid-template-columns: 1fr;
+  --panel-width: 0px;
+  grid-template-rows: auto auto;
+}
+
+/* ▼▼▼ ここが最重要の修正箇所です ▼▼▼ */
+body.static-page .main-content-wrapper {
+  /* 1. App用の固定高(100vh)を解除し、コンテンツの高さに合わせる */
+  height: auto;
+
+  /* 2. App用の列指定(grid-column: 2/3)を上書きし、1列目に配置する */
+  grid-column: 1 / 2;
+
+  /* 念のため、100vhだった頃の名残の内部スクロールも解除 */
+  overflow: visible;
+
+  /* ▼▼▼ 修正追加 ▼▼▼ */
+  /* アプリ本体（index.html）で使われている内部グリッドレイアウト
+     (display: grid; grid-template-rows: auto 1fr;) 
+     を解除し、ヘッダーとコンテンツが自然に縦に並ぶようにします。
+     これにより、コンテンツがフッターと被るのを防ぎます。 */
+  display: block;
+}
+
+/* ▲▲▲ 修正ここまで ▲▲▲ */
+
+
+body.static-page .stageWrap {
+  /* 静的ページではstageWrapは使わない */
+  display: none;
+}
+
+/* 静的ページのコンテンツラッパー */
+.static-content {
+  padding: 24px;
+  max-width: 800px;
+  /* コンテンツの最大幅 */
+  margin: 24px auto;
+  /* 上下にマージン、左右は自動で中央寄せ */
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+
+  /* ▼ フッターとの間に十分なマージンを確保 ▼ */
+  margin-bottom: 48px;
+}
+
+.static-content h1 {
+  font-size: 24px;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 8px;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.static-content h2 {
+  font-size: 18px;
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+
+.static-content p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.static-content ul {
+  line-height: 1.7;
+  padding-left: 24px;
+}

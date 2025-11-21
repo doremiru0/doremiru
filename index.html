@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description"
+    content="楽譜画像にドレミやCDEの音名を表示して譜読み練習をサポートするWebツール「ドレミる」の公式トップページです。登録やインストールは不要で、ブラウザだけですぐに使えます。">
+  <title>楽譜読み練習ツール｜ドレミる</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Noto+Sans+JP:wght@400;500&display=swap"
+    rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="./static.css" />
+  <link rel="stylesheet" href="./top-page.css" />
+</head>
+
+<body class="static-page top-page">
+
+  <div class="main-content-wrapper">
+    <header class="site-header">
+      <a href="./index.html" class="header-logo">
+        <span class="logo-char-1">ド</span><span class="logo-char-2">レ</span><span class="logo-char-3">ミ</span><span
+          class="logo-char-4">る</span>
+      </a>
+      <nav class="header-nav">
+        <a href="./guide.html">使い方ガイド</a>
+      </nav>
+    </header>
+
+    <main class="top-main">
+
+      <section class="hero-section">
+        <div class="hero-content">
+          <h1 class="hero-logo">
+            <span class="logo-char-1">ド</span><span class="logo-char-2">レ</span><span class="logo-char-3">ミ</span><span
+              class="logo-char-4">る</span>
+          </h1>
+          <p class="hero-catchphrase">楽譜に<span class="highlight-doremi">『ドレミ』</span>を振って<span
+              class="highlight-miru">『みる』</span><br>新しい譜読みツール</p>
+          <div class="hero-buttons">
+            <a href="./guide.html" class="btn btn-secondary">使い方ガイド</a>
+            <a href="./app.html" class="btn btn-primary">始める</a>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="features-section">
+        <h2 class="section-title">ドレミるで出来ること</h2>
+        <ul class="features-list">
+          <li><i class="fa-solid fa-check"></i> 登録やインストールは不要、ブラウザだけですぐに使えます</li>
+          <li><i class="fa-solid fa-check"></i> お手持ちの楽譜画像（JPG, PNGなど）を読み込んで表示</li>
+          <li><i class="fa-solid fa-check"></i> クリックした位置に自動で音名（ドレミ / CDE）を表示</li>
+          <li><i class="fa-solid fa-check"></i> 五線の位置や間隔を楽譜に合わせて自由に調整</li>
+        </ul>
+      </section>
+
+      <!-- <section class="image-placeholder-section">
+        <div class="image-placeholder-box">
+          <p>（ここに実際の操作画像を配置予定）</p>
+        </div>
+      </section> -->
+
+      <section class="image-placeholder-section">
+        <div class="image-placeholder-box">
+          <img src="index_1.png" alt="ドレミるの操作画面イメージ">
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <nav class="footer-nav">
+      <a href="./index.html">Top</a>
+      <a href="./operator.html">運営者情報</a>
+      <a href="./privacy.html">プライバシーポリシー</a>
+      <a href="./terms.html">利用規約</a>
+      <a href="./contact.html">お問い合わせ</a>
+      <a href="./updates.html">更新履歴</a>
+    </nav>
+    <p class="copyright">© 2025 ドレミる</p>
+  </footer>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. アニメーションさせたい対象を取得
+      const targets = document.querySelectorAll('.features-section, .image-placeholder-section');
+
+      if (!targets.length) return;
+
+      // 2. 画面監視用のオブザーバーを作成
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          // 3. 要素が画面内に入ったら (isIntersecting)
+          if (entry.isIntersecting) {
+            // 4. .is-visible クラスを追加してアニメーションを実行
+            entry.target.classList.add('is-visible');
+            // 5. 一度表示したら、もう監視する必要はないので監視を解除
+            obs.unobserve(entry.target);
+          }
+        });
+      }, {
+        root: null, // ビューポート（画面）を基準
+        rootMargin: '0px',
+        threshold: 0.1 // 要素が 10% 画面に入ったら実行
+      });
+
+      // 6. 全ての対象要素の監視を開始
+      targets.forEach(target => {
+        observer.observe(target);
+      });
+    });
+  </script>
+
+</body>
+
+</html>

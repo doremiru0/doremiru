@@ -1,0 +1,261 @@
+:root {
+  --bg: #f9fafb;
+  --panel: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --accent: #3b82f6;
+  --border: #e5e7eb;
+
+  /* Dark palette (used in some UI parts) */
+  --bg-dark: #0f1115;
+  --panel-dark: #171a22;
+  --text-dark: #e6e8eb;
+  --border-dark: #222733;
+
+  --panel-width: 320px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+/* ▼▼▼ レイアウトの変更点 ▼▼▼
+  body全体をFlexboxコンテナにし、
+  「縦並び (column)」に設定します。
+  min-height: 100vh; で、ページの高さが
+  最低でも画面の高さになるようにします。
+*/
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', 'Noto Sans JP', ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ▼▼▼ レイアウトの変更点 ▼▼▼
+  メインコンテンツのラッパーが
+  「flex-grow: 1;」により、利用可能な
+  すべての余白を埋めるように伸長します。
+  これにより、コンテンツが短くてもフッターが
+  ページの一番下に押し下げられます。
+*/
+.main-content-wrapper {
+  flex-grow: 1;
+}
+
+/* ▼▼▼ フッターのレイアウト ▼▼▼
+  フッターは伸長せず(flex-shrink: 0)、
+  本来の高さだけを維持します。
+*/
+.site-footer {
+  flex-shrink: 0;
+  padding: 24px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+/* --- 以下は styles.css からコピーしたスタイル --- */
+
+/* Site header */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  height: 56px;
+  background: #ffffff;
+  /* <-- グレー背景に変更 */
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 100;
+}
+
+/* ▼▼▼ ヘッダーロゴのスタイル（全ページ共通） ▼▼▼ */
+.header-logo {
+  font-family: 'Kaisei Decol', sans-serif;
+  /* フォント適用 */
+  font-weight: 500;
+  font-size: 20px;
+  /* サイズ調整 */
+  letter-spacing: 0.05em;
+  /* 字間 */
+  color: var(--text);
+  text-decoration: none;
+}
+
+/* ホバーエフェクト無効化 */
+.header-logo:hover {
+  color: var(--text);
+  /* ホバー色を通常色と同じにする */
+}
+
+/* ロゴ文字色 (全ページ共通) */
+.header-logo .logo-char-1 {
+  color: #86cecb;
+}
+
+.header-logo .logo-char-2 {
+  color: #ebd3cf;
+}
+
+.header-logo .logo-char-3 {
+  color: #ffd98c;
+}
+
+.header-logo .logo-char-4 {
+  color: var(--text);
+}
+
+/* ▲▲▲ 変更ここまで ▲▲▲ */
+
+
+.header-nav a {
+  font-size: 14px;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 8px 12px;
+}
+
+.header-nav a:hover {
+  color: var(--accent);
+}
+
+/* Footer Nav */
+.footer-nav {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.footer-nav a {
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.footer-nav a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.copyright {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+  margin-top: 0;
+}
+
+/* Static Content */
+.static-content {
+  padding: 24px;
+  max-width: 800px;
+  margin: 24px auto;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 48px;
+}
+
+.static-content h1 {
+  font-size: 24px;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 8px;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.static-content h2 {
+  font-size: 18px;
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+
+.static-content p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.static-content ul {
+  line-height: 1.7;
+  padding-left: 24px;
+}
+
+/* .btn (contact.html のため) */
+.btn {
+  display: inline-block;
+  padding: 10px 18px;
+  background: var(--accent);
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  text-align: center;
+}
+
+/* ======================================== */
+/* ▼▼▼ 更新履歴ページ (updates.html) 用 ▼▼▼ */
+/* ======================================== */
+
+.update-item {
+  /* 項目ごとに線で区切る */
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+}
+
+.update-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.update-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.update-version {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.update-date {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.update-title {
+  /* static.css の h2 スタイルを上書き */
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.update-body {
+  /* static.css の p スタイルを参照 */
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 0;
+}

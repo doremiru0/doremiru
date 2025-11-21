@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description"
+    content="お手持ちの楽譜画像を読み込み、クリックした位置にドレミやCDEの音名を表示できる「ドレミる」のメイン画面です。五線の位置や間隔を楽譜に合わせて調整しながら、譜読み練習を進められます。">
+  <title>楽譜読み練習ツール (アプリ本体)｜ドレミる</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Noto+Sans+JP:wght@400;500&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+  <aside class="panel">
+
+    <button id="menuToggleBtn" class="btn-icon" aria-label="メニューを開閉">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+
+    <div class="panel-content-scrollable">
+
+      <h1>操作メニュー</h1>
+
+      <div class="control">
+        <span>楽譜画像を選択</span>
+        <input id="file" type="file" accept="image/*" />
+      </div>
+
+      <div class="group">
+        <h2>楽譜の調整</h2>
+
+        <div class="control control-slider">
+          <span>拡大率</span>
+          <button type="button" class="btn-step" data-target="scaleSlider" data-step="-1"
+            aria-label="拡大率を 0.01 減らす">-</button>
+          <input id="scaleSlider" type="range" min="0.2" max="4" step="0.01" value="1.0" />
+          <button type="button" class="btn-step" data-target="scaleSlider" data-step="1"
+            aria-label="拡大率を 0.01 増やす">+</button>
+          <output id="scaleOut">1.00</output>
+        </div>
+        <div class="row">
+          <button id="fitBtn" class="btn subtle">画像を全体表示</button>
+        </div>
+
+        <label class="control" style="display: none;">
+          <span>五線移動モード (ドラッグで五線を移動)</span>
+          <input id="staffMoveMode" type="checkbox" />
+          <span></span>
+        </label>
+        <p class="note" style="display: none;">
+          五線移動モード：五線と印をドラッグで上下左右に移動します。
+        </p>
+
+        <label class="control" style="display: none;">
+          <span>横オフセット（px）</span>
+          <input id="xOffset" type="range" min="-500" max="4500" step="1" value="24" />
+          <output id="xOffsetOut">24</output>
+        </label>
+        <label class="control" style="display: none;">
+          <span>縦オフセット（px）</span>
+          <input id="yOffset" type="range" min="-50" max="600" step="1" value="130" />
+          <output id="yOffsetOut">130</output>
+        </label>
+      </div>
+
+      <div class="group ad-placeholder">
+        <div class="ad-box">
+          広告 (300x200)
+        </div>
+      </div>
+      <div class="group">
+        <h2>五線の設定</h2>
+
+        <div class="control control-slider">
+          <span>線間隔（px）</span>
+          <button type="button" class="btn-step" data-target="spacing" data-step="-1"
+            aria-label="線間隔を 0.1 減らす">-</button>
+          <input id="spacing" type="range" min="13" max="40" step="0.1" value="17" />
+          <button type="button" class="btn-step" data-target="spacing" data-step="1"
+            aria-label="線間隔を 0.1 増やす">+</button>
+          <output id="spacingOut">17.0</output>
+        </div>
+        <label class="control" style="display: none;">
+          <span>画像移動モード</span>
+          <input id="imgMoveMode" type="checkbox" />
+          <span></span>
+        </label>
+
+        <label class="control" style="display: none;">
+          <span>削除モード</span>
+          <input id="eraseMode" type="checkbox" />
+          <span></span>
+        </label>
+        <p class="note" style="display: none;">
+          削除モード：クリックで近くの印を1つだけ削除します。
+        </p>
+
+        <div style="display: none;">
+          <input type="radio" name="active-staff-select" value="1" id="activeStaff1" aria-label="五線1を操作対象にする">
+          <input type="radio" name="active-staff-select" value="2" id="activeStaff2" aria-label="五線2を操作対象にする">
+          <input type="radio" name="active-staff-select" value="3" id="activeStaff3" aria-label="五線3を操作対象にする">
+          <input type="radio" name="active-staff-select" value="4" id="activeStaff4" aria-label="五線4を操作対象にする">
+        </div>
+        <div class="staff-config-grid">
+          <span class="header">五線ID</span>
+          <span class="header">表示</span>
+          <span class="header">音部記号</span>
+
+          <label for="activeStaff1" data-staff-id="1">ID:1</label>
+          <label class="toggle-switch" for="staffVisible1" data-staff-id="1">
+            <input type="checkbox" id="staffVisible1" aria-label="五線1を表示">
+            <span class="slider"></span>
+          </label>
+          <div class="segment-control staff-clef-group" data-staff-id="1">
+            <input type="radio" name="clef-select-1" value="G" id="clefG1"><label for="clefG1"
+              class="label-clef">𝄞</label>
+            <input type="radio" name="clef-select-1" value="F" id="clefF1"><label for="clefF1"
+              class="label-clef">𝄢</label>
+          </div>
+
+          <label for="activeStaff2" data-staff-id="2">ID:2</label>
+          <label class="toggle-switch" for="staffVisible2" data-staff-id="2">
+            <input type="checkbox" id="staffVisible2" aria-label="五線2を表示">
+            <span class="slider"></span>
+          </label>
+          <div class="segment-control staff-clef-group" data-staff-id="2">
+            <input type="radio" name="clef-select-2" value="G" id="clefG2"><label for="clefG2"
+              class="label-clef">𝄞</label>
+            <input type="radio" name="clef-select-2" value="F" id="clefF2"><label for="clefF2"
+              class="label-clef">𝄢</label>
+          </div>
+
+          <label for="activeStaff3" data-staff-id="3">ID:3</label>
+          <label class="toggle-switch" for="staffVisible3" data-staff-id="3">
+            <input type="checkbox" id="staffVisible3" aria-label="五線3を表示">
+            <span class="slider"></span>
+          </label>
+          <div class="segment-control staff-clef-group" data-staff-id="3">
+            <input type="radio" name="clef-select-3" value="G" id="clefG3"><label for="clefG3"
+              class="label-clef">𝄞</label>
+            <input type="radio" name="clef-select-3" value="F" id="clefF3"><label for="clefF3"
+              class="label-clef">𝄢</label>
+          </div>
+
+          <label for="activeStaff4" data-staff-id="4">ID:4</label>
+          <label class="toggle-switch" for="staffVisible4" data-staff-id="4">
+            <input type="checkbox" id="staffVisible4" aria-label="五線4を表示">
+            <span class="slider"></span>
+          </label>
+          <div class="segment-control staff-clef-group" data-staff-id="4">
+            <input type="radio" name="clef-select-4" value="G" id="clefG4"><label for="clefG4"
+              class="label-clef">𝄞</label>
+            <input type="radio" name="clef-select-4" value="F" id="clefF4"><label for="clefF4"
+              class="label-clef">𝄢</label>
+          </div>
+        </div>
+        <p class="note">
+          （選択中の五線は青く表示されます）
+        </p>
+        <div class="row">
+          <button id="clearActiveMarkersBtn" class="btn subtle">選択中の印を消す</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <h2>その他設定</h2>
+
+        <div class="control control-slider">
+          <span>キャンバスの濃度 (不透明度)</span>
+          <button type="button" class="btn-step" data-target="canvasOpacitySlider" data-step="-1"
+            aria-label="濃度を 0.05 減らす">-</button>
+          <input id="canvasOpacitySlider" type="range" min="0" max="1" step="0.05" value="0.7" />
+          <button type="button" class="btn-step" data-target="canvasOpacitySlider" data-step="1"
+            aria-label="濃度を 0.05 増やす">+</button>
+          <output id="canvasOpacityOut">0.70</output>
+        </div>
+
+        <div class="control control-segment">
+          <span>表記</span>
+          <div class="segment-control">
+            <input type="radio" name="note-style-select" value="solfege" id="noteStyleSolfege" checked>
+            <label for="noteStyleSolfege">ドレミ</label>
+            <input type="radio" name="note-style-select" value="letter" id="noteStyleLetter">
+            <label for="noteStyleLetter">C D E</label>
+          </div>
+        </div>
+
+        <div class="row">
+          <button id="markersResetBtn" class="btn subtle">全てデフォルトに戻す</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content-wrapper">
+    <header class="site-header">
+      <a href="./index.html" class="header-logo">
+        <span class="logo-char-1">ド</span><span class="logo-char-2">レ</span><span class="logo-char-3">ミ</span><span
+          class="logo-char-4">る</span>
+      </a>
+      <nav class="header-nav">
+        <a href="./guide.html">使い方ガイド</a>
+      </nav>
+    </header>
+
+    <main class="stageWrap" id="stageWrap" aria-label="画像と五線の表示領域">
+      <div id="viewport">
+        <!-- <img id="scoreImg" src="./assets/samplje-score.jpg" alt="楽譜" /> -->
+        <img id="scoreImg" src="slide1.jpeg" alt="楽譜" />
+        <canvas id="stage" width="1200" height="700" aria-label="五線キャンバス"></canvas>
+      </div>
+    </main>
+
+    <div class="mode-switcher">
+      <div class="sub-mode-buttons">
+        <button id="imgMoveModeBtn" class="mode-btn" aria-label="画像移動モード" data-tooltip="画像をドラッグして移動">
+          <i class="fa-solid fa-image"></i>
+        </button>
+        <button id="moveModeBtn" class="mode-btn" aria-label="五線移動モード" data-tooltip="五線をドラッグして移動">
+          <i class="fa-solid fa-arrows-up-down-left-right"></i>
+        </button>
+        <button id="drawModeBtn" class="mode-btn" aria-label="印をつけるモード" data-tooltip="クリックして印を追加">
+          ド
+        </button>
+        <button id="eraseModeBtn" class="mode-btn" aria-label="印を消すモード" data-tooltip="クリックして印を消去">
+          <i class="fa-solid fa-eraser"></i>
+        </button>
+      </div>
+
+      <div class="fab-main-row">
+        <button id="mainFab" class="mode-btn fab-main" aria-label="操作モードを選択" data-tooltip="表示">
+          <i class="fa-solid fa-ellipsis"></i>
+        </button>
+        <button id="undoBtn" class="mode-btn" aria-label="元に戻す" data-tooltip="元に戻す">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+        <button id="redoBtn" class="mode-btn" aria-label="やり直す" data-tooltip="やり直す">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <footer class="site-footer">
+    <nav class="footer-nav">
+      <a href="./index.html">Top</a>
+      <a href="./operator.html">運営者情報</a>
+      <a href="./privacy.html">プライバシーポリシー</a>
+      <a href="./terms.html">利用規約</a>
+      <a href="./contact.html">お問い合わせ</a>
+      <a href="./updates.html">更新履歴</a>
+    </nav>
+    <p class="copyright">© 2025 ドレミる</p>
+  </footer>
+
+  <div id="uiTooltip" class="ui-tooltip" role="status" aria-hidden="true"></div>
+
+  <script src="./main.js"></script>
+
+  <script>
+    (() => {
+      const tooltip = document.getElementById('uiTooltip');
+      const EDGE = 8;
+      const GAP = 12;
+
+      let activeEl = null;
+      let rafId = null;
+
+      const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+
+      function computeAndPlace(el) {
+        if (!el) return;
+
+        const newText = el.getAttribute('data-tooltip') || el.getAttribute('aria-label') || '';
+        if (tooltip.textContent !== newText) {
+          tooltip.textContent = newText;
+        }
+
+        tooltip.classList.add('show');
+        tooltip.setAttribute('aria-hidden', 'false');
+
+        const rect = el.getBoundingClientRect();
+        const tw = tooltip.offsetWidth;
+        const th = tooltip.offsetHeight;
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        let side = 'right';
+        if (el.id === 'mainFab') side = 'right';
+        else if (el.id === 'undoBtn' || el.id === 'redoBtn') side = 'top';
+
+        let left, top;
+
+        if (side === 'top') {
+          left = rect.left + (rect.width / 2) - (tw / 2);
+          top = rect.top - GAP - th;
+        } else {
+          left = rect.right + GAP;
+          top = rect.top + (rect.height / 2) - (th / 2);
+        }
+
+        top = clamp(top, EDGE, vh - th - EDGE);
+
+        if (side === 'right' && (left + tw + EDGE > vw)) {
+          left = rect.left - GAP - tw;
+          tooltip.setAttribute('data-side', 'left');
+        } else {
+          tooltip.setAttribute('data-side', side);
+        }
+
+        left = clamp(left, EDGE, vw - tw - EDGE);
+
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${top}px`;
+      }
+
+      function requestPlace(el) {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+          computeAndPlace(el);
+          rafId = null;
+        });
+      }
+
+      function showFor(el) {
+        activeEl = el;
+        requestPlace(el);
+      }
+
+      function updateFor(el) {
+        if (activeEl === el) {
+          requestPlace(el);
+        } else {
+          showFor(el);
+        }
+      }
+
+      function hideTooltip() {
+        activeEl = null;
+        tooltip.classList.remove('show');
+        tooltip.setAttribute('aria-hidden', 'true');
+      }
+
+      const targets = document.querySelectorAll('.mode-btn');
+      targets.forEach(el => {
+        el.addEventListener('mouseenter', () => showFor(el));
+        el.addEventListener('focus', () => showFor(el));
+        el.addEventListener('mousemove', () => updateFor(el));
+        el.addEventListener('mouseleave', hideTooltip);
+        el.addEventListener('blur', hideTooltip);
+      });
+
+      const followActive = () => { if (activeEl) requestPlace(activeEl); };
+      window.addEventListener('resize', followActive);
+      window.addEventListener('scroll', followActive);
+    })();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,303 @@
+/* ======================================== */
+/* ▼▼▼ トップページ (index.html) 専用スタイル ▼▼▼ */
+/* ======================================== */
+
+/* .static-content の代わりに .top-main を使う */
+body.top-page .top-main {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+/* 1. ヒーローセクション（グラデーション背景） */
+.hero-section {
+  /* 背景: 薄いネイビーのグラデーション */
+  background: linear-gradient(135deg, #2c3e50 0%, #436483 100%);
+  color: #ffffff;
+  padding: 64px 24px;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* ▼▼▼ 変更：ロゴフォントの適用 ▼▼▼ */
+.hero-logo {
+  /* font-size: 48px; */
+  /* (既存の値) */
+  /* font-weight: 500; */
+  /* (既存の値) */
+  margin: 0;
+  /* (ロゴ画像に差し替え予定) */
+
+  /* フォントを Kaisei Decol に変更 */
+  font-family: 'Kaisei Decol', sans-serif;
+  font-weight: 500;
+  font-size: 70px;
+  /* フォントに合わせて微調整 */
+  letter-spacing: 0.05em;
+}
+
+/* ▲▲▲ 変更ここまで ▲▲▲ */
+
+
+.hero-catchphrase {
+  font-size: 20px;
+  color: #e6e8eb;
+  margin: 16px 0 32px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+/* static.css の .btn を継承 */
+.hero-buttons .btn {
+  font-size: 16px;
+  padding: 12px 28px;
+  min-width: 180px;
+}
+
+.hero-buttons .btn.btn-primary {
+  /* 「スタート」ボタン (既存の --accent 色) */
+  background: var(--accent);
+}
+
+.hero-buttons .btn.btn-secondary {
+  /* 「使い方ガイド」ボタン */
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+}
+
+.hero-buttons .btn.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ▼▼▼ 削除：.hero-appeal のスタイルは不要になったため削除 ▼▼▼ */
+/*
+.hero-appeal { ... }
+.hero-appeal span { ... }
+*/
+/* ▲▲▲ 削除ここまで ▲▲▲ */
+
+
+/* 2. 機能セクション */
+/* 2. 機能セクション */
+.features-section {
+  padding: 48px 24px;
+  max-width: 1024px;
+  /* 800px から 1024px に変更 */
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 28px;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 32px;
+  color: var(--text);
+}
+
+.features-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  display: grid;
+  /* display: flex から変更 */
+  grid-template-columns: 1fr;
+  /* モバイル（デフォルト）では1列 */
+  gap: 16px;
+  /* 隙間 */
+}
+
+/* 画面幅が640px以上の場合に2列グリッドを適用 */
+/* 画面幅が768px以上の場合に2列グリッドを適用 */
+@media (min-width: 768px) {
+
+  /* 640px から 768px に変更 */
+  .features-list {
+    grid-template-columns: 1fr 1fr;
+    /* 2列に変更 */
+    gap: 20px 32px;
+    /* 隙間を調整 (行: 20px, 列: 32px) */
+  }
+}
+
+.features-list li {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.features-list .fa-check {
+  color: var(--accent);
+  font-size: 18px;
+}
+
+/* ... (前略) ... */
+
+/* 3. 画像プレースホルダーセクション */
+.image-placeholder-section {
+  padding: 0 24px 64px;
+  max-width: 830px;
+  margin: 0 auto;
+}
+
+/* ▼▼▼ 変更 ▼▼▼ */
+/* プレースホルダーのスタイルを削除 */
+.image-placeholder-box {
+  width: 100%;
+}
+
+/* ▼▼▼ 追加 ▼▼▼ */
+/* 挿入した画像自体にスタイルを適用 */
+.image-placeholder-box img {
+  width: 100%;
+  /* 横幅をコンテナいっぱいに */
+  height: auto;
+  /* 縦横比を維持 */
+  border-radius: 8px;
+  /* 画像の角を丸くする */
+  border: 1px solid var(--border);
+  /* 細い枠線を追加 */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  /* 自然な影を追加 */
+}
+
+/* ▲▲▲ 変更ここまで ▲▲▲ */
+
+
+/* ... (後略) ... */
+
+/* ▼▼▼ top-page.css の一番下に追加 ▼▼▼ */
+
+/* キャッチコピーのハイライトスタイル */
+/* B案: マゼンタピンク ＋ シアン */
+.hero-catchphrase .highlight-doremi {
+  color: #ec4899;
+  /* 明るいマゼンタピンク */
+  font-weight: 500;
+  text-shadow: 0 0 8px rgba(236, 72, 153, 0.3);
+}
+
+.hero-catchphrase .highlight-miru {
+  color: #67e8f9;
+  /* 明るいシアン */
+  font-weight: 500;
+  text-shadow: 0 0 8px rgba(103, 232, 249, 0.3);
+}
+
+/* ▼▼▼ ヒーローセクション内の機能リスト（追加分） ▼▼▼ */
+.hero-features {
+  margin-top: 48px;
+  /* ボタンとの間隔 */
+}
+
+.hero-features h2 {
+  font-size: 20px;
+  font-weight: 500;
+  color: #ffffff;
+  margin-top: 0;
+  margin-bottom: 24px;
+  text-align: center;
+  /* 念のため中央揃え */
+}
+
+.hero-features-grid {
+  display: grid;
+  /* 画面幅に応じて自動で列数を調整します */
+  /* スマホ（1列）→ タブレット（2列）→ PC（2列）を想定 */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.feature-item {
+  background: rgba(255, 255, 255, 0.08);
+  /* 囲いの背景色 (半透明の白) */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* 囲いの枠線 (半透明の白) */
+  border-radius: 8px;
+  /* 角丸 */
+  padding: 16px 20px;
+  /* 内側の余白 */
+  font-size: 15px;
+  color: #e6e8eb;
+  /* テキストの色 */
+  text-align: left;
+  /* テキストは左揃えに */
+  line-height: 1.6;
+}
+
+
+/* ▼▼▼ 変更：ヘッダーロゴのスタイルは static.css に移動したため削除 ▼▼▼ */
+
+
+/* ロゴ（ドレミる）の各文字の色を指定します。
+*/
+
+/* --- ヒーローセクションのロゴ (背景が濃いネイビー) --- */
+/* (デフォルトは白) */
+.hero-logo .logo-char-1 {
+  color: #86cecb;
+}
+
+.hero-logo .logo-char-2 {
+  color: #ebd3cf;
+}
+
+.hero-logo .logo-char-3 {
+  color: #fcf5a7;
+}
+
+.hero-logo .logo-char-4 {
+  color: #ffffff;
+}
+
+/* ======================================== */
+/* ▼▼▼ スクロールアニメーション ▼▼▼ */
+/* ======================================== */
+
+/* アニメーションの準備状態（初期状態）
+  - .features-section と .image-placeholder-section を
+  - 最初は透明 (opacity: 0) にして、
+  - 少し下 (transform: translateY(50px)) に配置しておきます。
+  - transitionで、変化にかかる時間を指定します。
+*/
+.features-section,
+.image-placeholder-section {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+/* オプション：
+  画像の方を少し遅れてアニメーションさせると、リッチな印象になります。
+*/
+.image-placeholder-section {
+  transition-delay: 0.1s;
+}
+
+/* 画面内に入った時に JavaScript から付与されるクラス
+  - 透明度を1（不透明）に
+  - 位置をY:0（元の位置）に戻します
+*/
+.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
