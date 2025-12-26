@@ -18,15 +18,14 @@
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <link rel="stylesheet" href="./styles.css" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NSN3YKM2RV"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NSN3YKM2RV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-  gtag('config', 'G-NSN3YKM2RV');
-</script>
+    gtag('config', 'G-NSN3YKM2RV');
+  </script>
 </head>
 
 <body>
@@ -84,11 +83,6 @@
         </label>
       </div>
 
-      <!-- <div class="group ad-placeholder">
-        <div class="ad-box">
-          広告 (300x200)
-        </div>
-      </div> -->
       <div class="group">
         <h2>五線の設定</h2>
 
@@ -112,15 +106,14 @@
           <input id="eraseMode" type="checkbox" />
           <span></span>
         </label>
-        <p class="note" style="display: none;">
-          削除モード：クリックで近くの印を1つだけ削除します。
-        </p>
 
         <div style="display: none;">
           <input type="radio" name="active-staff-select" value="1" id="activeStaff1" aria-label="五線1を操作対象にする">
           <input type="radio" name="active-staff-select" value="2" id="activeStaff2" aria-label="五線2を操作対象にする">
           <input type="radio" name="active-staff-select" value="3" id="activeStaff3" aria-label="五線3を操作対象にする">
           <input type="radio" name="active-staff-select" value="4" id="activeStaff4" aria-label="五線4を操作対象にする">
+          <input type="radio" name="active-staff-select" value="5" id="activeStaff5" aria-label="五線5を操作対象にする">
+          <input type="radio" name="active-staff-select" value="6" id="activeStaff6" aria-label="五線6を操作対象にする">
         </div>
         <div class="staff-config-grid">
           <span class="header">五線ID</span>
@@ -172,6 +165,30 @@
             <input type="radio" name="clef-select-4" value="G" id="clefG4"><label for="clefG4"
               class="label-clef">𝄞</label>
             <input type="radio" name="clef-select-4" value="F" id="clefF4"><label for="clefF4"
+              class="label-clef">𝄢</label>
+          </div>
+
+          <label for="activeStaff5" data-staff-id="5">ID:5</label>
+          <label class="toggle-switch" for="staffVisible5" data-staff-id="5">
+            <input type="checkbox" id="staffVisible5" aria-label="五線5を表示">
+            <span class="slider"></span>
+          </label>
+          <div class="segment-control staff-clef-group" data-staff-id="5">
+            <input type="radio" name="clef-select-5" value="G" id="clefG5"><label for="clefG5"
+              class="label-clef">𝄞</label>
+            <input type="radio" name="clef-select-5" value="F" id="clefF5"><label for="clefF5"
+              class="label-clef">𝄢</label>
+          </div>
+
+          <label for="activeStaff6" data-staff-id="6">ID:6</label>
+          <label class="toggle-switch" for="staffVisible6" data-staff-id="6">
+            <input type="checkbox" id="staffVisible6" aria-label="五線6を表示">
+            <span class="slider"></span>
+          </label>
+          <div class="segment-control staff-clef-group" data-staff-id="6">
+            <input type="radio" name="clef-select-6" value="G" id="clefG6"><label for="clefG6"
+              class="label-clef">𝄞</label>
+            <input type="radio" name="clef-select-6" value="F" id="clefF6"><label for="clefF6"
               class="label-clef">𝄢</label>
           </div>
         </div>
@@ -226,7 +243,6 @@
 
     <main class="stageWrap" id="stageWrap" aria-label="画像と五線の表示領域">
       <div id="viewport">
-        <!-- <img id="scoreImg" src="./assets/samplje-score.jpg" alt="楽譜" /> -->
         <img id="scoreImg" src="slide1.jpeg" alt="楽譜" />
         <canvas id="stage" width="1200" height="700" aria-label="五線キャンバス"></canvas>
       </div>
