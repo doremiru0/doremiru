@@ -89,7 +89,6 @@ body.menu-closed {
   /* ▼▼▼ 変更点(1/2)：スクロールバー非表示（Firefox, IE）▼▼▼ */
   scrollbar-width: none;
   -ms-overflow-style: none;
-  /* ▲▲▲ 変更ここまで ▲▲▲ */
 }
 
 body.menu-closed .panel-content-scrollable,
@@ -391,7 +390,6 @@ body.menu-closed .panel h1 {
   font-size: 1.5em;
 }
 
-/* 旧: 擬似要素ツールチップは無効化 */
 .mode-btn::after {
   content: none !important;
 }
@@ -509,7 +507,6 @@ body.menu-closed .panel h1 {
   padding-left: 2px;
 }
 
-
 .staff-config-grid label[for^="activeStaff"] {
   justify-self: start;
   padding-left: 0px;
@@ -521,7 +518,6 @@ body.menu-closed .panel h1 {
   height: 0;
   position: absolute;
 }
-
 
 .staff-clef-group {
   display: flex;
@@ -540,12 +536,10 @@ body.menu-closed .panel h1 {
   transition: color 0.2s, background-color 0.2s;
 }
 
-
 .staff-config-grid input:disabled {
   opacity: 0.3;
 }
 
-/* disabled時のラベルスタイル */
 .segment-control input[type="radio"]:disabled+label {
   opacity: 0.4;
   cursor: not-allowed;
@@ -555,7 +549,6 @@ body.menu-closed .panel h1 {
   border-color: var(--border);
 }
 
-
 /* Site header */
 .site-header {
   display: flex;
@@ -564,32 +557,24 @@ body.menu-closed .panel h1 {
   padding: 0 24px;
   height: 56px;
   background: #ffffff;
-  /* <-- グレー背景に変更 */
   border-bottom: 1px solid var(--border);
   position: relative;
   z-index: 100;
 }
 
-/* ▼▼▼ ヘッダーロゴのスタイル（全ページ共通） ▼▼▼ */
 .header-logo {
   font-family: 'Kaisei Decol', sans-serif;
-  /* フォント適用 */
   font-weight: 500;
   font-size: 20px;
-  /* サイズ調整 */
   letter-spacing: 0.05em;
-  /* 字間 */
   color: var(--text);
   text-decoration: none;
 }
 
-/* ホバーエフェクト無効化 */
 .header-logo:hover {
   color: var(--text);
-  /* ホバー色を通常色と同じにする */
 }
 
-/* ロゴ文字色 (全ページ共通) */
 .header-logo .logo-char-1 {
   color: #86cecb;
 }
@@ -606,9 +591,6 @@ body.menu-closed .panel h1 {
   color: var(--text);
 }
 
-/* ▲▲▲ 変更ここまで ▲▲▲ */
-
-
 .header-nav a {
   font-size: 14px;
   color: var(--muted);
@@ -619,11 +601,6 @@ body.menu-closed .panel h1 {
 .header-nav a:hover {
   color: var(--accent);
 }
-
-
-/* ======================================== */
-/* ▼▼▼ 提案UIのスタイル ▼▼▼ */
-/* ======================================== */
 
 /* 1. 広告プレースホルダー */
 .ad-placeholder {
@@ -653,8 +630,6 @@ body.menu-closed .panel h1 {
   height: 24px;
   cursor: pointer;
   justify-self: start;
-  /* 'center' から 'start' に変更 */
-  /* staff-grid用 */
 }
 
 .toggle-switch input {
@@ -721,7 +696,6 @@ body.menu-closed .panel h1 {
   line-height: 1.4;
 }
 
-/* 音部記号ラベルのスタイル */
 .segment-control label.label-clef {
   font-size: 18px;
   font-weight: 400;
@@ -730,7 +704,6 @@ body.menu-closed .panel h1 {
   width: 38px;
   text-align: center;
 }
-
 
 .segment-control label+input[type="radio"]+label {
   border-left: 1px solid var(--border);
@@ -747,7 +720,6 @@ body.menu-closed .panel h1 {
   border-color: var(--accent);
 }
 
-/* 「表記」セグメントコントロール用のレイアウト */
 .control.control-segment {
   grid-template-columns: auto auto;
   gap: 6px 10px;
@@ -768,7 +740,7 @@ body.menu-closed .panel h1 {
 
 
 /* ======================================== */
-/* ▼▼▼ 4. 行ハイライト ▼▼▼ */
+/* ▼▼▼ 4. 行ハイライト (ID:6まで拡張) ▼▼▼ */
 /* ======================================== */
 
 /* (A) 行を構成する要素の基本スタイル */
@@ -807,19 +779,23 @@ body.menu-closed .panel h1 {
   pointer-events: auto;
 }
 
-/* (D) ハイライトのロジック (背景色) */
+/* (D) ハイライトのロジック (背景色) - ID:6まで追加 */
 div:has(#activeStaff1:checked)~.staff-config-grid [data-staff-id="1"],
 div:has(#activeStaff2:checked)~.staff-config-grid [data-staff-id="2"],
 div:has(#activeStaff3:checked)~.staff-config-grid [data-staff-id="3"],
-div:has(#activeStaff4:checked)~.staff-config-grid [data-staff-id="4"] {
+div:has(#activeStaff4:checked)~.staff-config-grid [data-staff-id="4"],
+div:has(#activeStaff5:checked)~.staff-config-grid [data-staff-id="5"],
+div:has(#activeStaff6:checked)~.staff-config-grid [data-staff-id="6"] {
   background-color: var(--highlight-bg);
 }
 
-/* (E) ハイライトのロジック (IDラベルの文字色) */
+/* (E) ハイライトのロジック (IDラベルの文字色) - ID:6まで追加 */
 div:has(#activeStaff1:checked)~.staff-config-grid label[for="activeStaff1"][data-staff-id="1"],
 div:has(#activeStaff2:checked)~.staff-config-grid label[for="activeStaff2"][data-staff-id="2"],
-div:has(#activeS_aff3:checked)~.staff-config-grid label[for="activeStaff3"][data-staff-id="3"],
-div:has(#activeStaff4:checked)~.staff-config-grid label[for="activeStaff4"][data-staff-id="4"] {
+div:has(#activeStaff3:checked)~.staff-config-grid label[for="activeStaff3"][data-staff-id="3"],
+div:has(#activeStaff4:checked)~.staff-config-grid label[for="activeStaff4"][data-staff-id="4"],
+div:has(#activeStaff5:checked)~.staff-config-grid label[for="activeStaff5"][data-staff-id="5"],
+div:has(#activeStaff6:checked)~.staff-config-grid label[for="activeStaff6"][data-staff-id="6"] {
   color: var(--accent);
   font-weight: 500;
 }
@@ -830,19 +806,23 @@ div:has(#activeStaff4:checked)~.staff-config-grid label[for="activeStaff4"][data
   background-color: var(--bg);
 }
 
-/* (G) 選択中の行のホバーは、(D)のハイライト色を維持する */
+/* (G) 選択中の行のホバーは、(D)のハイライト色を維持する - ID:6まで追加 */
 div:has(#activeStaff1:checked)~.staff-config-grid [data-staff-id="1"]:hover,
 div:has(#activeStaff2:checked)~.staff-config-grid [data-staff-id="2"]:hover,
-div:has(#activeStaff3:checked)~.staff-config-grid [data-stats-id="3"]:hover,
-div:has(#activeStaff4:checked)~.staff-config-grid [data-staff-id="4"]:hover {
+div:has(#activeStaff3:checked)~.staff-config-grid [data-staff-id="3"]:hover,
+div:has(#activeStaff4:checked)~.staff-config-grid [data-staff-id="4"]:hover,
+div:has(#activeStaff5:checked)~.staff-config-grid [data-staff-id="5"]:hover,
+div:has(#activeStaff6:checked)~.staff-config-grid [data-staff-id="6"]:hover {
   background-color: var(--highlight-bg);
 }
 
-/* (H) 音部記号がハイライトされた時の背景色調整 */
+/* (H) 音部記号がハイライトされた時の背景色調整 - ID:6まで追加 */
 div:has(#activeStaff1:checked)~.staff-config-grid [data-staff-id="1"].segment-control label,
 div:has(#activeStaff2:checked)~.staff-config-grid [data-staff-id="2"].segment-control label,
 div:has(#activeStaff3:checked)~.staff-config-grid [data-staff-id="3"].segment-control label,
-div:has(#activeStaff4:checked)~.staff-config-grid [data-staff-id="4"].segment-control label {
+div:has(#activeStaff4:checked)~.staff-config-grid [data-staff-id="4"].segment-control label,
+div:has(#activeStaff5:checked)~.staff-config-grid [data-staff-id="5"].segment-control label,
+div:has(#activeStaff6:checked)~.staff-config-grid [data-staff-id="6"].segment-control label {
   background-color: var(--panel);
 }
 
@@ -850,16 +830,20 @@ div:has(#activeStaff4:checked)~.staff-config-grid [data-staff-id="4"].segment-co
 div:has(#activeStaff1:checked)~.staff-config-grid [data-staff-id="1"].segment-control input:checked+label,
 div:has(#activeStaff2:checked)~.staff-config-grid [data-staff-id="2"].segment-control input:checked+label,
 div:has(#activeStaff3:checked)~.staff-config-grid [data-staff-id="3"].segment-control input:checked+label,
-div:has(#activeStaff4:checked)~.staff-config-grid [data-staff-id="4"].segment-control input:checked+label {
+div:has(#activeStaff4:checked)~.staff-config-grid [data-staff-id="4"].segment-control input:checked+label,
+div:has(#activeStaff5:checked)~.staff-config-grid [data-staff-id="5"].segment-control input:checked+label,
+div:has(#activeStaff6:checked)~.staff-config-grid [data-staff-id="6"].segment-control input:checked+label {
   background-color: var(--accent);
 }
 
-/* (I) 「(選択中)」テキストの追加 */
+/* (I) 「(選択中)」テキストの追加 - ID:6まで追加 */
 div:has(#activeStaff1:checked)~.staff-config-grid label[for="activeStaff1"][data-staff-id="1"]::after,
 div:has(#activeStaff2:checked)~.staff-config-grid label[for="activeStaff2"][data-staff-id="2"]::after,
 div:has(#activeStaff3:checked)~.staff-config-grid label[for="activeStaff3"][data-staff-id="3"]::after,
-div:has(#activeStaff4:checked)~.staff-config-grid label[for="activeStaff4"][data-staff-id="4"]::after {
-  content: "(選択中)";
+div:has(#activeStaff4:checked)~.staff-config-grid label[for="activeStaff4"][data-staff-id="4"]::after,
+div:has(#activeStaff5:checked)~.staff-config-grid label[for="activeStaff5"][data-staff-id="5"]::after,
+div:has(#activeStaff6:checked)~.staff-config-grid label[for="activeStaff6"][data-staff-id="6"]::after {
+  content: " (選択中)";
   font-size: 11px;
   font-weight: 400;
   color: var(--accent);
@@ -869,7 +853,6 @@ div:has(#activeStaff4:checked)~.staff-config-grid label[for="activeStaff4"][data
 .site-footer {
   grid-row: 2 / 3;
   grid-column: 1 / -1;
-
   padding: 24px;
   background: var(--bg);
   border-top: 1px solid var(--border);
@@ -903,69 +886,34 @@ div:has(#activeStaff4:checked)~.staff-config-grid label[for="activeStaff4"][data
   margin-top: 0;
 }
 
-/* ▼▼▼ 変更点(2/2)：スクロールバー非表示（Chrome, Safari）▼▼▼ */
 .panel-content-scrollable::-webkit-scrollbar {
   display: none;
 }
 
-/* ...（既存のスタイルはすべてそのまま）... */
-
-/* ▼▼▼ 変更点(2/2)：スクロールバー非表示（Chrome, Safari）▼▼▼ */
-.panel-content-scrollable::-webkit-scrollbar {
-  display: none;
-}
-
-/* ======================================== */
-/* ▼▼▼ 静的ページ用のスタイル (修正版) ▼▼▼ */
-/* ======================================== */
-
-/* 静的ページ用のbodyレイアウト */
 body.static-page {
-  /* サイドパネル（grid-template-columnsの1列目）を無くす */
   grid-template-columns: 1fr;
   --panel-width: 0px;
   grid-template-rows: auto auto;
 }
 
-/* ▼▼▼ ここが最重要の修正箇所です ▼▼▼ */
 body.static-page .main-content-wrapper {
-  /* 1. App用の固定高(100vh)を解除し、コンテンツの高さに合わせる */
   height: auto;
-
-  /* 2. App用の列指定(grid-column: 2/3)を上書きし、1列目に配置する */
   grid-column: 1 / 2;
-
-  /* 念のため、100vhだった頃の名残の内部スクロールも解除 */
   overflow: visible;
-
-  /* ▼▼▼ 修正追加 ▼▼▼ */
-  /* アプリ本体（index.html）で使われている内部グリッドレイアウト
-     (display: grid; grid-template-rows: auto 1fr;) 
-     を解除し、ヘッダーとコンテンツが自然に縦に並ぶようにします。
-     これにより、コンテンツがフッターと被るのを防ぎます。 */
   display: block;
 }
 
-/* ▲▲▲ 修正ここまで ▲▲▲ */
-
-
 body.static-page .stageWrap {
-  /* 静的ページではstageWrapは使わない */
   display: none;
 }
 
-/* 静的ページのコンテンツラッパー */
 .static-content {
   padding: 24px;
   max-width: 800px;
-  /* コンテンツの最大幅 */
   margin: 24px auto;
-  /* 上下にマージン、左右は自動で中央寄せ */
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 8px;
-
-  /* ▼ フッターとの間に十分なマージンを確保 ▼ */
   margin-bottom: 48px;
 }
 
