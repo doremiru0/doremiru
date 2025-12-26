@@ -5,7 +5,7 @@ function setupHiDPICanvas(canvas) {
   const rect = canvas.getBoundingClientRect();
 
   const cssW = 3000;
-  const cssH = 1500;
+  const cssH = 3000;
 
   canvas.width = Math.floor(cssW * dpr);
   canvas.height = Math.floor(cssH * dpr);
@@ -938,7 +938,7 @@ function initializeApp() {
 
   fitImageToCanvas();
 
-  yOffsetEl.max = 3000;
+  yOffsetEl.max = 2900;
   xOffsetEl.max = 4500;
 
   spacingEl.value = 17;
