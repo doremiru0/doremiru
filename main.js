@@ -106,7 +106,6 @@ function stepToY(n, y0, spacing, clef = 'G') {
   return baseLineY - (n * (spacing / 2));
 }
 
-// オクターブ表示機能を削除
 function formatNoteLabel(letter, octave, style) {
   const noteName = (style === "letter") ? letter : SOLFEGE[letter];
   return noteName;
@@ -131,14 +130,11 @@ function setupStepButtons() {
 
       let newValue = currentValue + (step * stepDirection);
 
-      // min/max の範囲内に収める
       newValue = Math.max(min, Math.min(max, newValue));
 
-      // 浮動小数点数による誤差を補正 (stepが0.05など)
       const stepString = step.toString();
       const decimalPlaces = stepString.includes('.') ? stepString.split('.')[1].length : 0;
 
-      // toFixed で文字列にした後、再度 parseFloat で数値に戻す
       newValue = parseFloat(newValue.toFixed(decimalPlaces));
 
       if (targetSlider.value != newValue) {
@@ -190,7 +186,9 @@ const staffVisible1 = document.getElementById("staffVisible1");
 const staffVisible2 = document.getElementById("staffVisible2");
 const staffVisible3 = document.getElementById("staffVisible3");
 const staffVisible4 = document.getElementById("staffVisible4");
-const staffVisibleCheckboxes = [null, staffVisible1, staffVisible2, staffVisible3, staffVisible4];
+const staffVisible5 = document.getElementById("staffVisible5");
+const staffVisible6 = document.getElementById("staffVisible6");
+const staffVisibleCheckboxes = [null, staffVisible1, staffVisible2, staffVisible3, staffVisible4, staffVisible5, staffVisible6];
 
 // ================= データ構造 =================
 let staffs = {};
@@ -214,7 +212,6 @@ function createNewStaff(id, defaultX = 24, defaultY = 80, isVisible = true, clef
 function getActiveStaff() {
   return activeStaffId ? staffs[activeStaffId] : null;
 }
-// ==============================================
 
 // ================= 履歴管理 (Undo/Redo) =================
 let historyStack = [];
@@ -321,11 +318,10 @@ function addMarker(x, y) {
   if (!activeStaff || !activeStaff.isVisible) return;
 
   const { y0, spacing, markers, clef } = activeStaff;
-
   const n = yToStep(y, y0, spacing, clef);
 
   if (Math.abs(n) > MAX_STEP_RANGE) {
-    return; // 許容範囲外ならマーカーを追加しない
+    return;
   }
 
   const { letter, octave } = stepToLetterOct(n, clef);
@@ -443,12 +439,11 @@ canvas.addEventListener("mousemove", (e) => {
       if (!activeStaff || !activeStaff.isVisible) return;
 
       const { y0, spacing, clef } = activeStaff;
-
       const n = yToStep(y, y0, spacing, clef);
 
       if (Math.abs(n) > MAX_STEP_RANGE) {
-        previewMarker = null; // 範囲外ならプレビューしない
-        render(); // 残っているかもしれないプレビューを消すために描画
+        previewMarker = null;
+        render();
         return;
       }
 
@@ -482,7 +477,6 @@ function drawMarkers(ctx) {
   ctx.save();
   ctx.textAlign = "right";
 
-  // 1. 既存のマーカーを描画
   for (const id in staffs) {
     const staff = staffs[id];
     if (!staff.isVisible) continue;
@@ -490,7 +484,6 @@ function drawMarkers(ctx) {
     for (let i = 0; i < staff.markers.length; i++) {
       const m = staff.markers[i];
       const label = formatNoteLabel(m.letter, m.octave, style);
-
       const isHover = (staff.id === hoverStaffId && i === hoverIndex);
 
       ctx.fillStyle = isHover ? "#ffa500" : "#ffffff";
@@ -507,17 +500,14 @@ function drawMarkers(ctx) {
       ctx.textBaseline = "middle";
 
       ctx.fillStyle = isHover ? "#ffa500" : "#e6e8eb";
-
       ctx.font = "12px ui-sans-serif, system-ui, -apple-system";
       ctx.fillText(label, m.x + textOffsetX, m.y + textOffsetY);
     }
   }
 
-  // 2. 追加プレビューのマーカーを描画
   if (previewMarker) {
     const m = previewMarker;
     const label = formatNoteLabel(m.letter, m.octave, style);
-
     const previewColor = "rgba(238, 13, 227, 1)";
     ctx.fillStyle = previewColor;
 
@@ -542,7 +532,6 @@ function render() {
 
 
 function updateStaffControlsFromState() {
-  // 1. アクティブな五線IDを検証・更新する
   let visibleStaves = [];
   for (const id in staffs) {
     if (staffs[id].isVisible) {
@@ -553,12 +542,10 @@ function updateStaffControlsFromState() {
   if (visibleStaves.length === 0) {
     activeStaffId = null;
   } else if (!activeStaffId || !staffs[activeStaffId] || !staffs[activeStaffId].isVisible) {
-    // もしアクティブIDが無効なら、最初に見つかった表示中の五線を選択
     activeStaffId = visibleStaves.length > 0 ? visibleStaves[0].id : null;
   }
 
-  // 2. 状態をUIコントロールに反映する
-  for (let id = 1; id <= 4; id++) {
+  for (let id = 1; id <= 6; id++) { // 修正: 4から6へ
     const staff = staffs[id];
     if (!staff) continue;
 
@@ -570,14 +557,11 @@ function updateStaffControlsFromState() {
     visibleCheck.checked = staff.isVisible;
     activeRadio.checked = (staff.id === activeStaffId);
 
-    // activeRadio.disabled = !staff.isVisible; (削除)
-
     if (staff.clef === 'G') {
       clefGRadio.checked = true;
     } else {
       clefFRadio.checked = true;
     }
-    // 他のコントロールは、表示状態に基づいて無効化する
     clefGRadio.disabled = !staff.isVisible;
     clefFRadio.disabled = !staff.isVisible;
   }
@@ -607,7 +591,6 @@ function updateSlidersForActiveStaff() {
   spacingOut.value = Number(activeStaff.spacing).toFixed(1);
 
   xOffsetEl.value = activeStaff.x0;
-
   xOffsetOut.value = activeStaff.x0;
   yOffsetEl.value = activeStaff.y0;
   yOffsetOut.value = activeStaff.y0;
@@ -698,15 +681,11 @@ yOffsetEl.addEventListener("change", () => saveState());
 
 
 markersResetBtn.addEventListener("click", () => {
-  // ここで警告ポップアップを表示します
   const isConfirmed = window.confirm("すべての設定と印をデフォルトに戻しますか?\n（この操作は取り消せません）");
-
-  // ユーザーが「OK」を押した場合 (isConfirmed が true の場合) のみ、リセットを実行します
   if (isConfirmed) {
     initializeApp();
     saveState();
   }
-  // 「キャンセル」が押された場合は何もしません
 });
 
 clearActiveMarkersBtn.addEventListener("click", () => {
@@ -732,19 +711,18 @@ staffVisible1.addEventListener("change", () => setStaffVisibility(1, staffVisibl
 staffVisible2.addEventListener("change", () => setStaffVisibility(2, staffVisible2.checked));
 staffVisible3.addEventListener("change", () => setStaffVisibility(3, staffVisible3.checked));
 staffVisible4.addEventListener("change", () => setStaffVisibility(4, staffVisible4.checked));
+staffVisible5.addEventListener("change", () => setStaffVisibility(5, staffVisible5.checked)); // 追加
+staffVisible6.addEventListener("change", () => setStaffVisibility(6, staffVisible6.checked)); // 追加
 
 
 function addStaffControlListeners() {
-  // 1. 「操作対象」ラジオボタンのリスナー
   document.querySelectorAll('input[name="active-staff-select"]').forEach(radio => {
     radio.addEventListener('change', () => {
       if (radio.checked) {
         const newId = Number(radio.value);
         const staff = staffs[newId];
 
-        // 1. 自動で表示するロジック
         if (staff && !staff.isVisible) {
-          // データとチェックボックスを強制的にオンにする
           staff.isVisible = true;
           const visibilityCheckbox = document.getElementById(`staffVisible${newId}`);
           if (visibilityCheckbox) {
@@ -753,14 +731,11 @@ function addStaffControlListeners() {
 
           activeStaffId = newId;
 
-          // UIコントロール（スライダーや記号ボタン）の
-          // disabled状態を更新し、スライダーに値をセットする
           updateStaffControlsFromState();
           updateSlidersForActiveStaff();
           render();
           saveState();
         }
-        // 2. (元から表示されていて) 単にアクティブIDを切り替えるロジック
         else if (newId && newId !== activeStaffId) {
           activeStaffId = newId;
           updateSlidersForActiveStaff();
@@ -772,7 +747,6 @@ function addStaffControlListeners() {
   });
 
 
-  // 2. 「音部記号」ラジオボタンのリスナー
   document.querySelectorAll('input[name^="clef-select-"]').forEach(radio => {
     radio.addEventListener('change', () => {
       if (radio.checked) {
@@ -801,7 +775,6 @@ function addStaffControlListeners() {
   });
 }
 
-// 新しい「表記」ラジオボタンのリスナー
 document.querySelectorAll('input[name="note-style-select"]').forEach(radio => {
   radio.addEventListener('change', render);
 });
@@ -871,7 +844,6 @@ canvas.addEventListener("mousedown", (e) => {
     return;
   }
 
-  // 五線移動モードの判定 (X座標もチェック)
   if (staffMoveModeEl.checked) {
     const activeStaff = getActiveStaff();
     if (!activeStaff) {
@@ -880,23 +852,16 @@ canvas.addEventListener("mousedown", (e) => {
       return;
     }
 
-    // マウスのX, Y座標が五線の範囲内かチェック
     const { x, y } = getCanvasXY(e);
-
-    // Y座標の範囲
     const staffTop = activeStaff.y0;
     const staffBottom = activeStaff.y0 + (activeStaff.lines - 1) * activeStaff.spacing;
-
-    // X座標の範囲
     const staffLeft = activeStaff.x0;
-    const staffRight = canvas.getBoundingClientRect().width; // キャンバスの現在の幅
+    const staffRight = canvas.getBoundingClientRect().width;
 
-    // XまたはY座標が五線の範囲外なら、ドラッグを開始しない
     if (y < staffTop || y > staffBottom || x < staffLeft || x > staffRight) {
       return;
     }
 
-    // 範囲内ならドラッグ開始
     isStaffDragging = true;
     lastDragX = e.clientX;
     lastDragY = e.clientY;
@@ -983,6 +948,8 @@ function initializeApp() {
   createNewStaff(2, 24, 260, false, 'G');
   createNewStaff(3, 24, 390, false, 'G');
   createNewStaff(4, 24, 520, false, 'G');
+  createNewStaff(5, 24, 650, false, 'G'); // 追加
+  createNewStaff(6, 24, 780, false, 'G'); // 追加
   activeStaffId = 1;
 
   canvasOpacitySlider.value = 0.7;
@@ -993,14 +960,9 @@ function initializeApp() {
   updateSlidersForActiveStaff();
 
   imgMoveModeEl.checked = false;
-  staffMoveModeEl.checked = true; // デフォルトは五線移動
-  eraseModeEl.checked = false;
+  staffMoveModeEl.checked = true;
 
-  // ▼▼▼ 変更点 ▼▼▼
-  // アプリ起動時に、デフォルトの「五線移動モード」の
-  // イベントを強制的に実行し、カーソル（.is-staff-move）を正しく設定する
   staffMoveModeEl.dispatchEvent(new Event("change"));
-  // ▲▲▲ 変更ここまで ▲▲▲
 
   render();
   updateHistoryButtons();
