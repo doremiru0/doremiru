@@ -603,6 +603,15 @@ window.addEventListener("resize", () => { ctx = setupHiDPICanvas(canvas); render
 fileEl.addEventListener("change", (e) => {
   const file = e.target.files?.[0];
   if (!file) return;
+
+  if (file.type === 'application/pdf') {
+    if (window.handlePdfFile) {
+      window.handlePdfFile(file);
+    }
+    e.target.value = "";
+    return; // 以降の画像処理（FileReader）は行わない
+  }
+
   const reader = new FileReader();
   reader.onload = () => { scoreImg.src = reader.result; };
   reader.readAsDataURL(file);
@@ -948,8 +957,8 @@ function initializeApp() {
   createNewStaff(2, 24, 260, false, 'G');
   createNewStaff(3, 24, 390, false, 'G');
   createNewStaff(4, 24, 520, false, 'G');
-  createNewStaff(5, 24, 650, false, 'G'); // 追加
-  createNewStaff(6, 24, 780, false, 'G'); // 追加
+  createNewStaff(5, 24, 650, false, 'G');
+  createNewStaff(6, 24, 780, false, 'G');
   activeStaffId = 1;
 
   canvasOpacitySlider.value = 0.7;
