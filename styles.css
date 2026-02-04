@@ -942,3 +942,24 @@ body.static-page .stageWrap {
   line-height: 1.7;
   padding-left: 24px;
 }
+
+.pdf-notice-box {
+  margin-top: 8px;
+  padding: 10px;
+  background-color: var(--highlight-bg);
+  /* main.js等で定義されている薄い青 */
+  border-left: 4px solid var(--accent);
+  border-radius: 4px;
+}
+
+.pdf-notice-box .note {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.pdf-notice-box i {
+  color: var(--accent);
+  margin-right: 4px;
+}
